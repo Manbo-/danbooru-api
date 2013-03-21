@@ -14,7 +14,7 @@ module Danbooru
 
     attr_accessor :site
 
-    def method_missing(name, *args)
+    def get(name, *args)
       command, options = args
       raise ArgumentError unless command
       options = { } unless options
@@ -23,6 +23,10 @@ module Danbooru
                  options_to_params(options)].inject(""){ |s, i| URI.join(s, i) }
       response = open(api_uri).read
       parse(response, format)
+    end
+
+    def method_missing(name, *args)
+      get(name, *args)
     end
 
     private
